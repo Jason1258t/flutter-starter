@@ -30,12 +30,13 @@ class ApiService {
 
   late final Token token;
   late final Auth auth;
+  Future? initilized;
 
   ApiService({required this.preferencesService}) {
-    initialServices();
+    initilized = initialServices();
   }
 
-  void initialServices() async {
+  Future initialServices() async {
     token = await preferencesService.getToken();
 
     log(token.accessToken.toString());
@@ -48,5 +49,9 @@ class ApiService {
   Future<void> logout() async {
     await preferencesService.logout();
     auth.refreshToken(Token.zero());
+  }
+
+  bool hasToken() {
+    return token.accessToken.isNotEmpty;
   }
 }

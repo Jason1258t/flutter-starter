@@ -37,6 +37,7 @@ dependencies:
 
   flutter_dotenv: ^5.1.0
   shared_preferences: ^2.2.0
+  flutter_secure_storage: ^9.0.0
   local_auth: ^2.1.7
 
   flutter_bloc: ^8.1.3
@@ -46,6 +47,9 @@ dependencies:
   dio: ^5.3.2
   pretty_dio_logger: ^1.3.1
   url_launcher: ^6.1.14
+
+  yandex_mapkit: ^3.3.3
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +77,17 @@ flutter:
     - assets/icons/
     - assets/images/
     - .env
+
+  fonts:
+    - family: VTBGroup
+      fonts:
+        - asset: assets/fonts/VTBGroupUI-Regular.ttf
+        - asset: assets/fonts/VTBGroupUI-Medium.ttf
+        - asset: assets/fonts/VTBGroupUI-Light.ttf
+        - asset: assets/fonts/VTBGroupUI-Bold.ttf
+        - asset: assets/fonts/VTBGroupUI-DemiBold.ttf
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

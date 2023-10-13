@@ -6,18 +6,21 @@ import 'package:starter/utils/utils.dart';
 import 'package:starter/widgets/buttons/custom_button.dart';
 import 'package:starter/widgets/text_fields/base_text_form_field.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController repeatPasswordController = TextEditingController();
 
   bool hidePassword = true;
+  bool nameError = false;
   bool emailError = false;
 
   @override
@@ -46,6 +49,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 48,
                 ),
                 BaseTextFormField(
+                  controller: nameController,
+                  keyboardType: TextInputType.name,
+                  hintText: 'Ваше имя',
+                  error: nameError,
+                  onChange: (v) {
+                    setState(() {
+                      emailError =
+                      !RegExp(AppStrings.emailRegExp).hasMatch(v ?? '');
+                    });
+                  },
+                ),
+                BaseTextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   hintText: 'yourmail@gmail.com',
@@ -53,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChange: (v) {
                     setState(() {
                       emailError =
-                          !RegExp(AppStrings.emailRegExp).hasMatch(v ?? '');
+                      !RegExp(AppStrings.emailRegExp).hasMatch(v ?? '');
                     });
                   },
                 ),
@@ -63,7 +78,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 BaseTextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.visiblePassword,
-                  hintText: 'password',
+                  hintText: 'Пароль',
+                  obscureText: hidePassword,
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: AppColors.border,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        hidePassword = !hidePassword;
+                      });
+                    },
+                  ),
+                ),
+                BaseTextFormField(
+                  controller: passwordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  hintText: 'Повторите пароль',
                   obscureText: hidePassword,
                   suffixIcon: IconButton(
                     icon: const Icon(
@@ -81,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 CustomButton(
-                    text: 'Войти', onTap: () {}, width: double.infinity),
+                    text: 'Зарегистрировться', onTap: () {}, width: double.infinity),
                 const SizedBox(
                   height: 8,
                 ),
@@ -97,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .copyWith(color: Colors.black),
                           ),
                           TextSpan(
-                              text: 'Регистрация',
+                              text: 'Вход',
                               style: AppTypography.fon12w400.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.primary),

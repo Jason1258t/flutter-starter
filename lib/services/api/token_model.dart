@@ -3,15 +3,15 @@ class Token {
   String refreshToken;
 
   Token.fromJson(Map<String, dynamic> json)
-      : accessToken = json['access'],
-        refreshToken = json['refresh'];
+      : accessToken = json['accessToken'],
+        refreshToken = json['refreshToken'];
 
   Token.zero()
       : refreshToken = '',
         accessToken = '';
 
   Map<String, String> toJson() =>
-      {'access': accessToken, 'refresh': refreshToken};
+      {'accessToken': accessToken, 'refreshToken': refreshToken};
 
   void copy(Token token) {
     accessToken = token.accessToken;

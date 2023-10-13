@@ -16,6 +16,15 @@ class AuthRepository {
 
   User? user;
 
+  void checkLogin() async {
+    await _apiService.initilized;
+    if (_apiService.hasToken()) {
+      appState.add(AppStateEnum.auth);
+    } else {
+      appState.add(AppStateEnum.unAuth);
+    }
+  }
+
   void login(String email, String password) async {
     authState.add(LoadingStateEnum.loading);
     try {

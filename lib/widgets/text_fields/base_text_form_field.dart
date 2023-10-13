@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:starter/utils/utils.dart';
 
 class BaseTextFormField extends StatefulWidget {
-  const BaseTextFormField({
-    Key? key,
-    required this.controller,
-    required this.keyboardType,
-    this.height = 80,
-    this.width = double.infinity,
-    this.padding = const EdgeInsets.all(10),
-    this.maxLines = 1,
-    this.hintText = '',
-    this.obscureText = false,
-  }) : super(key: key);
+  const BaseTextFormField(
+      {Key? key,
+      required this.controller,
+      required this.keyboardType,
+      this.height = 70,
+      this.width = double.infinity,
+      this.padding = const EdgeInsets.all(10),
+      this.maxLines = 1,
+      this.hintText = '',
+      this.obscureText = false,
+      this.suffixIcon,
+      this.onChange,
+      this.error = false})
+      : super(key: key);
 
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -25,6 +28,9 @@ class BaseTextFormField extends StatefulWidget {
   final int maxLines;
   final String hintText;
   final bool obscureText;
+  final Widget? suffixIcon;
+  final Function(String?)? onChange;
+  final bool error;
 
   @override
   State<BaseTextFormField> createState() => _BaseTextFormFieldState();
@@ -45,24 +51,30 @@ class _BaseTextFormFieldState extends State<BaseTextFormField> {
           obscureText: widget.obscureText,
           textAlignVertical: TextAlignVertical.bottom,
           decoration: InputDecoration(
-            hintStyle: AppTypography.font16w400,
-            // fillColor: AppColors.grey8E8E93,
-            filled: true,
+            hintStyle:
+                AppTypography.font16w400.copyWith(color: AppColors.border),
+            suffixIcon: widget.suffixIcon,
             hintText: widget.hintText,
-            label: widget.controller.text != '' ? Text(widget.hintText) : null,
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
+            //label: widget.controller.text != '' ? Text(widget.hintText) : null,
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(12.0),
               ),
               borderSide: BorderSide(
-                color: AppColors.border,
+                color: widget.error ? AppColors.error : AppColors.border,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+              borderSide: BorderSide(
+                color: widget.error ? AppColors.error : AppColors.border,
               ),
             ),
           ),
-          style: AppTypography.font16w400.copyWith(color: AppColors.border),
-          onChanged: (String value) {
-            setState(() {});
-          },
+          style: AppTypography.font16w400.copyWith(color: Colors.black),
+          onChanged: widget.onChange,
           controller: widget.controller,
         ),
       ),

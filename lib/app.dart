@@ -4,6 +4,9 @@ import 'package:starter/feature/auth/bloc/app/app_cubit.dart';
 import 'package:starter/feature/auth/bloc/auth/auth_cubit.dart';
 import 'package:starter/feature/auth/data/auth_repository.dart';
 import 'package:starter/feature/auth/ui/login_screen.dart';
+import 'package:starter/feature/home/ui/home_screen.dart';
+import 'package:starter/feature/map/data/map_repository.dart';
+import 'package:starter/feature/map/ui/map_screen.dart';
 import 'package:starter/services/api/api_service.dart';
 import 'package:starter/services/preferences.dart';
 
@@ -19,7 +22,9 @@ class MyRepositoryProvider extends StatelessWidget {
       body: MultiRepositoryProvider(
         providers: [
           RepositoryProvider(
-              create: (_) => AuthRepository(apiService: apiService)),
+              create: (_) => AuthRepository(apiService: apiService)..checkLogin()),
+          RepositoryProvider(
+              create: (_) => MapRepository()),
         ],
         child: const MyBlocProviders(),
         // child: MyApp(),
@@ -66,15 +71,16 @@ class AppStateWidget extends StatelessWidget {
           // TODO: implement listener
         },
         builder: (context, state) {
-          if (state is AppAuthState) {
-            return Scaffold();
-          } else if (state is AppUnAuthState) {
-            return const LoginScreen();
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+          // if (state is AppAuthState) {
+          //   return Scaffold();
+          // } else if (state is AppUnAuthState) {
+          //   return const LoginScreen();
+          // } else {
+          //   return const Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // }
+          return const HomeScreen();
         },
       ),
     );
