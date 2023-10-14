@@ -22,7 +22,7 @@ void main() async {
 
   await dotenv.load();
 
-  runApp(const MyApp());
+  runApp(const MyRepositoryProvider());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Nunito',
       ),
       routes: {
-        '/': (context) => const MyRepositoryProvider(),
+        '/': (context) => const AppStateWidget(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/map': (context) => const MapScreen(),

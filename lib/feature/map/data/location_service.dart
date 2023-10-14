@@ -1,8 +1,20 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:geolocator/geolocator.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:starter/models/location.dart';
 
 class LocationService {
   final defLocation = const MoscowLocation();
+
+  BehaviorSubject<AppLatLong> positionStream = BehaviorSubject.seeded(const MoscowLocation());
+
+  void initialStream () {
+    Timer.periodic(const Duration(seconds: 1), (timer) async {
+      positionStream.add(await getCurrentLocation());
+    });
+  }
 
   Future<AppLatLong> getCurrentLocation() async {
     return Geolocator.getCurrentPosition().then((value) {

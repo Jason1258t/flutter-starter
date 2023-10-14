@@ -5,8 +5,10 @@ import 'package:starter/feature/auth/bloc/auth/auth_cubit.dart';
 import 'package:starter/feature/auth/data/auth_repository.dart';
 import 'package:starter/feature/auth/ui/login_screen.dart';
 import 'package:starter/feature/home/ui/home_screen.dart';
+import 'package:starter/feature/map/bloc/routes/routes_cubit.dart';
 import 'package:starter/feature/map/data/map_repository.dart';
 import 'package:starter/feature/map/ui/map_screen.dart';
+import 'package:starter/main.dart';
 import 'package:starter/services/api/api_service.dart';
 import 'package:starter/services/preferences.dart';
 
@@ -18,17 +20,17 @@ class MyRepositoryProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MultiRepositoryProvider(
+    return
+     MultiRepositoryProvider(
         providers: [
           RepositoryProvider(
-              create: (_) => AuthRepository(apiService: apiService)..checkLogin()),
-          RepositoryProvider(
-              create: (_) => MapRepository()),
+              create: (_) =>
+                  AuthRepository(apiService: apiService)..checkLogin()),
+          RepositoryProvider(create: (_) => MapRepository()),
         ],
         child: const MyBlocProviders(),
         // child: MyApp(),
-      ),
+
     );
   }
 }
@@ -38,8 +40,7 @@ class MyBlocProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MultiBlocProvider(
+    return MultiBlocProvider(
         providers: [
           BlocProvider<AppCubit>(
             create: (_) => AppCubit(
@@ -53,9 +54,13 @@ class MyBlocProviders extends StatelessWidget {
             ),
             lazy: false,
           ),
+          BlocProvider<RoutesCubit>(
+            create: (_) => RoutesCubit(),
+            lazy: false,
+          ),
         ],
-        child: const AppStateWidget(),
-      ),
+        child: const MyApp(),
+
     );
   }
 }

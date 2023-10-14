@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:starter/feature/map/data/location_service.dart';
 import 'package:starter/models/location.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -13,35 +13,29 @@ class MapRepository {
     _initPermission();
   }
 
-  YandexMap? map;
-  Future<AppLatLong>? latLong;
-
-  Future init(List<MapObject<dynamic>> mapObjects) async {
-    map ??= YandexMap(
-      onMapCreated: (controller) {
-        latLong!.then((value) => _moveToCurrentLocation(value, controller));
-      },
-      mapObjects: mapObjects,
-    );
-  }
+  Future<AppLatLong>? futureLatLong;
+  BehaviorSubject<AppLatLong>? stream;
 
   Future<void> _initPermission() async {
     if (!await LocationService().checkPermission()) {
       await LocationService().requestPermission();
     }
     _fetchCurrentLocation();
+    final ls = LocationService();
+    ls.initialStream();
+    stream = ls.positionStream;
   }
 
   Future<void> _fetchCurrentLocation() async {
-    latLong = LocationService().getCurrentLocation();
+    futureLatLong = LocationService().getCurrentLocation();
   }
 
-  Future<void> _moveToCurrentLocation(
+  Future<void> moveToCurrentLocation(
     AppLatLong appLatLong,
     YandexMapController controller,
   ) async {
     controller.moveCamera(
-      animation: const MapAnimation(type: MapAnimationType.linear, duration: 0),
+      animation: const MapAnimation(type: MapAnimationType.linear, duration: 1),
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(

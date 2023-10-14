@@ -9,9 +9,20 @@ class AppTypography {
     fontWeight: FontWeight.w400,
   );
 
+  static final font20w600 = _font.copyWith(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.w600
+  );
+
   static final fon12w400 = _font.copyWith(
     color: Colors.white,
     fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+  static final fon14w400 = _font.copyWith(
+    color: Colors.white,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
   );
 
