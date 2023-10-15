@@ -14,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Карта',
+              'Профиль',
               style: AppTypography.font20w600,
             ),
             Image.asset(
