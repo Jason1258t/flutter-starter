@@ -31,9 +31,10 @@ class MapRepository {
   }
 
   Future<void> moveToCurrentLocation(
-    AppLatLong appLatLong,
+    AppLatLong? appLatLong,
     YandexMapController controller,
   ) async {
+    appLatLong ??= await LocationService().getCurrentLocation();
     controller.moveCamera(
       animation: const MapAnimation(type: MapAnimationType.linear, duration: 1),
       CameraUpdate.newCameraPosition(

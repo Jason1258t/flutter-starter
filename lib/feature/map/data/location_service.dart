@@ -11,7 +11,7 @@ class LocationService {
   BehaviorSubject<AppLatLong> positionStream = BehaviorSubject.seeded(const MoscowLocation());
 
   void initialStream () {
-    Timer.periodic(const Duration(seconds: 1), (timer) async {
+    Timer.periodic(const Duration(seconds: 3), (timer) async {
       positionStream.add(await getCurrentLocation());
     });
   }

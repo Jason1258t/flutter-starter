@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedTab,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Крата'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Карта'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Профиль'),
         ],
         onTap: onSelectTab,

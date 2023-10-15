@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:starter/utils/utils.dart';
+import 'package:starter/widgets/containers/office_container.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -38,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
                     width: 10,
                   ),
                   SizedBox(
-                    width: 250,
+                    width: 220,
                     child: Text(
                       'User',
                       style: AppTypography.font20w600
@@ -67,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             SliverList.builder(itemBuilder: (context, index) {
-              return
+              return const OfficeContainer();
             }, itemCount: 2,)
           ],
         ),

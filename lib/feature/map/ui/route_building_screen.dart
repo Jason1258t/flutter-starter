@@ -36,7 +36,7 @@ class _SessionState extends State<SessionPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1)).then((value) => showBottom());
+    Future.delayed(const Duration(seconds: 1)).then((value) => showBottom());
   }
 
   showBottom() {

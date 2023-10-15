@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:starter/feature/map/bloc/routes/routes_cubit.dart';
 import 'package:starter/feature/map/data/map_repository.dart';
 import 'package:starter/feature/map/ui/route_building_screen.dart';
+import 'package:starter/widgets/map_items/map_button.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../../../utils/utils.dart';
@@ -29,6 +30,7 @@ class _MainMap extends StatefulWidget {
 
 class _MainMapState extends State<_MainMap> {
   late final List<MapObject> mapObjects = [endPlacemark];
+  late YandexMapController _controller;
   PlacemarkMapObject endPlacemark = PlacemarkMapObject(
       mapId: const MapObjectId('end_placemark'),
       point: const Point(
@@ -59,14 +61,20 @@ class _MainMapState extends State<_MainMap> {
     super.dispose();
   }
 
+  DateTime? lastUserAction;
+
   void streamSubscription(YandexMapController controller) {
     final repository = RepositoryProvider.of<MapRepository>(context);
     subscription?.cancel();
     subscription ??= repository.stream!.stream.listen((event) async {
       final lastPos = await controller.getCameraPosition();
       if (Geolocator.distanceBetween(lastPos.target.latitude,
-              lastPos.target.longitude, event.lat, event.long) >
-          20) {
+                  lastPos.target.longitude, event.lat, event.long) >
+              20 &&
+          DateTime.now()
+                  .difference(lastUserAction ?? DateTime(2000))
+                  .inSeconds >
+              7) {
         repository.moveToCurrentLocation(event, controller);
         setState(() {
           if (mapObjects.length > 1) {
@@ -119,11 +127,15 @@ class _MainMapState extends State<_MainMap> {
                       flex: 6,
                       child: YandexMap(
                         onMapCreated: (controller) {
+                          _controller = controller;
                           repository.futureLatLong!.then((value) {
                             streamSubscription(controller);
                           });
                         },
                         onCameraPositionChanged: (position, reason, f) {
+                          if (reason == CameraUpdateReason.gestures) {
+                            lastUserAction = DateTime.now();
+                          }
                           print(
                               '${position.target.latitude} ${position.target.longitude} ${position.zoom}');
                         },
@@ -137,72 +149,20 @@ class _MainMapState extends State<_MainMap> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
+                children: <Widget>[
                   const SizedBox(
                     width: double.infinity,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      InkWell(
-                        onTap: showFiltersBottomSheet,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black45,
-                                    offset: Offset(0, 4),
-                                    blurRadius: 8)
-                              ]),
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Фильтры',
-                                style: AppTypography.font16w400
-                                    .copyWith(color: Colors.black),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              const Icon(
-                                Icons.filter_list_outlined,
-                                color: Colors.black,
-                                size: 20,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      MapButton.icon(onTap: () {
+                        repository.moveToCurrentLocation(null, _controller);
+                      }, asset: Icons.location_searching),
                       const SizedBox(width: 10),
-                      InkWell(
-                        onTap: _requestRoutes,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black45,
-                                    offset: Offset(0, 4),
-                                    blurRadius: 8)
-                              ]),
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Построить маршрут',
-                                style: AppTypography.font16w400
-                                    .copyWith(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                      MapButton.withSuffixIcon(onTap: showFiltersBottomSheet, text: 'Фильтры', asset: Icons.filter_list_outlined),
+                      const SizedBox(width: 10),
+                      MapButton.text(onTap: _requestRoutes, text: 'Построить маршрут')
                     ],
                   )
                 ],
